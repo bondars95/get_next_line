@@ -1,0 +1,30 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/serge/dev/clionProjects/get_next_line/get_next_line.h
+fcntl.h
+-
+stdio.h
+-
+libft/libft.h
+/home/serge/dev/clionProjects/get_next_line/libft/libft.h
+
+/home/serge/dev/clionProjects/get_next_line/libft/libft.h
+string.h
+-
+stdlib.h
+-
+unistd.h
+-
+
+/home/serge/dev/clionProjects/get_next_line/main.c
+stdio.h
+-
+get_next_line.h
+/home/serge/dev/clionProjects/get_next_line/get_next_line.h
+

@@ -1,0 +1,1 @@
+/usr/bin/cc  -std=c99 -g   CMakeFiles/get_next_line.dir/main.c.o  -o get_next_line ../libft/libft.a 
