@@ -49,7 +49,7 @@ static t_get    *check(t_get **current, const int fd)
     while (tmp && (tmp = tmp->next) != *current)
         if (tmp->fd == fd)
             return (tmp);
-    if ((result = (t_get *) (malloc(sizeof(t_get)) == NULL)))
+    if ((result = (t_get *)(malloc(sizeof(t_get)))) == NULL)
         return (NULL);
     result->string = NULL;
     result->fd = fd;
@@ -112,5 +112,8 @@ int     main(int argc, char **argv) {
 //        return (NULL);
 //    ft_memcpy(new_string, src, ft_strlen(src));
 //    printf("%s", new_string);
-    printf("%s", read_whole_file(0));
+    int fd = open("tmp", O_RDONLY);
+    char *line;
+    get_next_line(fd, &line);
+    printf("%s---", line);
 }
