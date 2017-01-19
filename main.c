@@ -38,21 +38,58 @@ static char     *read_whole_file(const  int fd)
     return ((byte < 0) ? (NULL) : (file));
 }
 
-static t_get    check(t_get **current, const int fd)
+static t_get    *check(t_get **current, const int fd)
 {
     t_get *tmp;
-    while (tmp && tmp->next != (struct s_get *) current) {
+    t_get *result;
 
+    tmp = *current;
+    if (tmp && tmp->fd == fd)
+        return (tmp);
+    while (tmp && (tmp = tmp->next) != *current)
+        if (tmp->fd == fd)
+            return (tmp);
+    if ((result = (t_get *) (malloc(sizeof(t_get)) == NULL)))
+        return (NULL);
+    result->string = NULL;
+    result->fd = fd;
+    if (*current)
+    {
+        result->next = *current;
+        tmp = *current;
+        while (tmp->next != *current)
+            tmp = tmp->next;
+        tmp->next = result;
     }
+    else
+        result->next = result;
+    return (result);
 }
 
 int		get_next_line(const int fd, char **line)
 {
-    static t_get	*ptr;
+    static t_get	    *ptr;
+    int                 i;
 
-    // check if struct is already in list
-
-
+    if ((ptr = check(&ptr, fd)) == NULL || BUFF_SIZE <= 0 || fd < 0)
+        return (READ_ERROR);
+    if (!ptr)
+    {
+        ptr->i = 0;
+        ptr->len = 0;
+        if ((ptr->string = read_whole_file(fd)) == NULL)
+            return (READ_ERROR);
+        i = -1;
+        ptr->len = ft_strlen(ptr->string);
+        // replace with one funt from lib
+        while (ptr->string[++i])
+            if (ptr->string[i] == '\n')
+                ptr->string[i] = '\0';
+    }
+    *line = ft_strdup(ptr->string + ptr->i);
+    if (ptr->i == ptr->len)
+        return (READ_COMPLETE);
+    return (READ_SUCCESS);
 }
 int     main(int argc, char **argv) {
     // case sig_abbort
