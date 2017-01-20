@@ -9,6 +9,7 @@ static char     *ft_realloc(char *str1, char *str2)
         return (NULL);
     ft_strcat(new_string, str1);
     ft_strcat(new_string, str2);
+    free(str1);
     return new_string;
 }
 
@@ -66,29 +67,31 @@ static t_get    *check(t_get **current, const int fd)
     return (result);
 }
 
-int		get_next_line(const int fd, char **line)
+int				get_next_line(const int fd, char **line)
 {
-    static t_get	    *ptr;
-    int                 i;
+    static t_get	*ptr;
+    int				i;
 
     if ((ptr = check(&ptr, fd)) == NULL || BUFF_SIZE <= 0 || fd < 0)
         return (READ_ERROR);
-    if (!ptr)
+    if (ptr->string == NULL)
     {
         ptr->i = 0;
-        ptr->len = 0;
         if ((ptr->string = read_whole_file(fd)) == NULL)
             return (READ_ERROR);
-        i = -1;
         ptr->len = ft_strlen(ptr->string);
-        // replace with one funt from lib
+        i = -1;
         while (ptr->string[++i])
             if (ptr->string[i] == '\n')
                 ptr->string[i] = '\0';
     }
     *line = ft_strdup(ptr->string + ptr->i);
-    if (ptr->i == ptr->len)
+    if (ptr->i >= ptr->len)
+    {
+		free(ptr);
         return (READ_COMPLETE);
+    }
+    ptr->i += 1 + ft_strlen(ptr->string + ptr->i);
     return (READ_SUCCESS);
 }
 int     main(int argc, char **argv) {
@@ -114,6 +117,11 @@ int     main(int argc, char **argv) {
 //    printf("%s", new_string);
     int fd = open("tmp", O_RDONLY);
     char *line;
+    line = (char *)malloc(33);
+    get_next_line(fd, &line);
+    printf("%s---", line);
+    get_next_line(fd, &line);
+    printf("%s---", line);
     get_next_line(fd, &line);
     printf("%s---", line);
 }
